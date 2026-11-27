@@ -53,3 +53,18 @@ Without configuration, the form opens a pre-filled email. To deliver messages to
 1. Create a free form at [formspree.io](https://formspree.io) and copy its ID (the part after `/f/`).
 2. In the repo, go to Settings → Secrets and variables → Actions → Variables and add `FORMSPREE_ID`.
 3. Re-run the "Deploy to GitHub Pages" workflow.
+
+## Notes: planned follow-ups
+
+### Contact form delivery
+The form currently falls back to opening the visitor's email app. To deliver messages straight to the inbox:
+1. Create a free form at [formspree.io](https://formspree.io) (free tier: 50 messages/month) and copy its ID.
+2. Add it as the repository variable `FORMSPREE_ID` (Settings → Secrets and variables → Actions → Variables).
+3. Re-run the "Deploy to GitHub Pages" workflow. No code change is needed; `src/components/Contact.astro` switches to Formspree automatically.
+
+### Ask AI
+A chat on the site that answers questions about Allan's work, CV and projects, like the "Ask AI" link on buildwithdennis.com.
+- GitHub Pages only serves static files, so the chat needs a small backend to keep the LLM API key secret, for example a free Cloudflare Worker.
+- The Worker would hold the API key as a secret, ground answers in the CV, the experience data and the project case studies, rate-limit requests and allow only this site's origin.
+- The site gets an "Ask AI" nav item and a chat panel that calls the Worker.
+- Needs: a Cloudflare account and an LLM API key.

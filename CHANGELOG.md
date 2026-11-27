@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New visual design: deep navy with soft glows, blue accent, Manrope and Space Grotesk fonts, uppercase letter-spaced buttons; dark only.
 - Intelligent Parking Assistant and Air Drums case studies expanded with details from the CV.
 - `/about/` now redirects to the About section on the home page and is excluded from the sitemap.
+- README notes on planned follow-ups: Formspree delivery for the contact form, and an Ask AI chat backed by a Cloudflare Worker.
 
 ### Removed
 - Terminal-style hero and the separate About page layout.
