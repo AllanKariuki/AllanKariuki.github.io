@@ -29,6 +29,8 @@ const projects = defineCollection({
     live: z.string().url().optional(),
     download: z.string().url().optional(),
     video: z.string().url().optional(),
+    // Optional screenshot in public/, e.g. "/covers/budget-tracker.png"; a generated cover is used otherwise.
+    cover: z.string().optional(),
   }),
 });
 

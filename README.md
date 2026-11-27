@@ -30,6 +30,7 @@ repo: https://github.com/AllanKariuki/budget-tracker-app
 live: https://...      # optional, adds a "Live demo" button
 download: https://...  # optional, adds a "Download" button
 video: https://...     # optional, adds a "Watch demo" button
+cover: /covers/x.png   # optional screenshot in public/; a generated cover is used otherwise
 ---
 
 ## Problem
@@ -40,6 +41,15 @@ video: https://...     # optional, adds a "Watch demo" button
 
 Buttons only appear for links that are set, so publishing a demo later means adding one line of frontmatter.
 
-## CV
+## Experience, skills and CV
 
-Drop a `cv.pdf` into `public/` and a "Download CV" button appears on the About page.
+- The experience timeline lives in `src/data/experience.ts`; summary, stats, education and competencies in `src/data/site.ts`. Both are condensed from the CV.
+- `public/cv.pdf` is the public CV behind the Resume and Download CV buttons. Replace the file to update it.
+
+## Contact form
+
+Without configuration, the form opens a pre-filled email. To deliver messages to your inbox instead:
+
+1. Create a free form at [formspree.io](https://formspree.io) and copy its ID (the part after `/f/`).
+2. In the repo, go to Settings → Secrets and variables → Actions → Variables and add `FORMSPREE_ID`.
+3. Re-run the "Deploy to GitHub Pages" workflow.

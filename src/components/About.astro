@@ -1,0 +1,63 @@
+---
+import Icon from "./Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
+import { EDUCATION, STATS } from "../data/site";
+---
+
+<section id="about" class="py-20" aria-labelledby="about-title">
+  <SectionHeader eyebrow="Professional summary" title="About me" id="about-title" />
+  <div class="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+    <div class="reveal space-y-4 text-base leading-relaxed text-fg/90 sm:text-lg">
+      <p>
+        I'm a full stack software engineer in Nairobi with 5 years of experience since 2021, across professional roles,
+        internships at JPMorgan Chase and Gearbox, and three years leading a backend team.
+      </p>
+      <p>
+        I build front ends in React, Next.js and Angular with TypeScript; back ends in Java, Kotlin, Node.js and Python
+        over PostgreSQL, Redis and Kafka; mobile apps in Kotlin Multiplatform and Jetpack Compose; and Web3 components in
+        Solidity and Hyperledger Fabric. Today I'm the lead engineer on two real-time aviation platforms, including an
+        airspace billing system.
+      </p>
+      <p>
+        Outside work I build for the places I live in: M-PESA-aware money tools, Kiswahili translation, and computer
+        vision against counterfeit medicines.
+      </p>
+    </div>
+    <div class="reveal card p-6">
+      <h3 class="flex items-center gap-2 font-display text-sm uppercase tracking-widest text-accent">
+        <Icon name="graduation" /> Education
+      </h3>
+      <ul class="mt-4 space-y-5">
+        {
+          EDUCATION.map((e) => (
+            <li>
+              <p class="font-semibold">{e.title}</p>
+              <p class="text-sm text-muted">{e.detail}</p>
+              <p class="mt-1 text-sm text-fg/80">
+                {e.place} · <span class="text-muted">{e.dates}</span>
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  <dl class="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
+    {
+      STATS.map((s) => (
+        <div class="reveal card p-5">
+          <dt class="text-sm text-muted">{s.label}</dt>
+          <dd class="order-first text-3xl font-bold text-accent sm:text-4xl">{s.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>
+
+<style>
+  dl > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import { EXPERIENCE } from "../data/experience";
+---
+
+<section id="experience" class="py-20" aria-labelledby="experience-title">
+  <SectionHeader eyebrow="Career path" title="Experience" id="experience-title" />
+  <ol class="relative ml-2 border-l border-line sm:ml-3">
+    {
+      EXPERIENCE.map((r) => (
+        <li class="reveal relative pb-12 pl-8 last:pb-0 sm:pl-10">
+          <span
+            class:list={[
+              "absolute -left-[7px] top-1.5 h-3.5 w-3.5 rounded-full border-2",
+              r.current ? "border-accent bg-accent shadow-[0_0_0_4px] shadow-accent/20" : "border-accent bg-bg",
+            ]}
+            aria-hidden="true"
+          />
+          <div class="card p-5 sm:p-6">
+            <div class="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+              <div>
+                <h3 class="text-lg font-semibold leading-snug">{r.title}</h3>
+                <p class="mt-0.5 text-accent">
+                  {r.company}
+                  {r.location && <span class="text-muted"> · {r.location}</span>}
+                </p>
+              </div>
+              <p class="shrink-0 font-display text-xs uppercase tracking-widest text-muted sm:pt-1.5">
+                {r.dates}
+                {r.current && <span class="ml-2 rounded-full bg-ok/15 px-2 py-0.5 text-ok">Now</span>}
+              </p>
+            </div>
+            <ul class="mt-4 space-y-2 text-sm leading-relaxed text-fg/85">
+              {r.bullets.map((b) => (
+                <li class="relative pl-4 before:absolute before:left-0 before:top-[0.6em] before:h-1.5 before:w-1.5 before:rounded-full before:bg-accent/70">
+                  {b}
+                </li>
+              ))}
+            </ul>
+            <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Technologies">
+              {r.tech.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>

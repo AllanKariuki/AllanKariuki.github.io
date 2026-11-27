@@ -1,0 +1,137 @@
+---
+import Icon from "./Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
+import { SITE } from "../data/site";
+
+// Set PUBLIC_FORMSPREE_ID (repo variable) to deliver messages via Formspree;
+// without it the form falls back to opening a pre-filled email.
+const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID as string | undefined;
+const action = formspreeId ? `https://formspree.io/f/${formspreeId}` : `mailto:${SITE.email}`;
+
+const channels = [
+  { icon: "mail", label: "Email", value: SITE.email, href: `mailto:${SITE.email}` },
+  { icon: "whatsapp", label: "WhatsApp", value: SITE.phone, href: SITE.whatsapp },
+  { icon: "linkedin", label: "LinkedIn", value: "allan-kariuki", href: SITE.linkedin },
+  { icon: "github", label: "GitHub", value: "@AllanKariuki", href: SITE.github },
+  { icon: "map-pin", label: "Location", value: `${SITE.location} · open to remote` },
+] as const;
+---
+
+<section id="contact" class="py-20" aria-labelledby="contact-title">
+  <SectionHeader eyebrow="Initialize connection" title="Let's build something" id="contact-title" />
+  <div class="grid gap-8 lg:grid-cols-[1.3fr_1fr]">
+    <form
+      id="contact-form"
+      class="reveal card space-y-4 p-6 sm:p-8"
+      action={action}
+      method="POST"
+      data-mode={formspreeId ? "formspree" : "mailto"}
+      data-email={SITE.email}
+    >
+      <p class="caret font-display text-sm text-muted">awaiting user input</p>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="block">
+          <span class="mb-1.5 block font-display text-xs uppercase tracking-widest text-muted">Name</span>
+          <input name="name" required autocomplete="name" class="field" />
+        </label>
+        <label class="block">
+          <span class="mb-1.5 block font-display text-xs uppercase tracking-widest text-muted">Email</span>
+          <input name="email" type="email" required autocomplete="email" class="field" />
+        </label>
+      </div>
+      <label class="block">
+        <span class="mb-1.5 block font-display text-xs uppercase tracking-widest text-muted">Message</span>
+        <textarea name="message" required rows="5" class="field resize-y"></textarea>
+      </label>
+      <!-- Honeypot: humans never see or fill this. -->
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+      <div class="flex flex-wrap items-center gap-4">
+        <button type="submit" class="btn btn-primary">Send message <Icon name="arrow-right" size={14} /></button>
+        <p id="form-status" class="text-sm" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+
+    <ul class="reveal card divide-y divide-line p-2">
+      {
+        channels.map((c) => (
+          <li>
+            {"href" in c ? (
+              <a
+                href={c.href}
+                target={c.href.startsWith("http") ? "_blank" : undefined}
+                rel="noopener"
+                class="flex items-center gap-4 rounded-md p-4 hover:bg-surface-2"
+              >
+                <Icon name={c.icon} class="text-accent" size={18} />
+                <span>
+                  <span class="block font-display text-xs uppercase tracking-widest text-muted">{c.label}</span>
+                  <span class="block break-all">{c.value}</span>
+                </span>
+              </a>
+            ) : (
+              <div class="flex items-center gap-4 p-4">
+                <Icon name={c.icon} class="text-accent" size={18} />
+                <span>
+                  <span class="block font-display text-xs uppercase tracking-widest text-muted">{c.label}</span>
+                  <span class="block">{c.value}</span>
+                </span>
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .field {
+    width: 100%;
+    border: 1px solid var(--color-line);
+    border-radius: 0.375rem;
+    background: var(--color-bg);
+    padding: 0.7rem 0.85rem;
+    color: var(--color-fg);
+    font-size: 0.95rem;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+</style>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const status = document.getElementById("form-status");
+
+  const show = (msg: string, ok: boolean) => {
+    if (!status) return;
+    status.textContent = msg;
+    status.className = `text-sm ${ok ? "text-ok" : "text-warn"}`;
+  };
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    if (data.get("_gotcha")) return;
+
+    if (form.dataset.mode === "mailto") {
+      const subject = encodeURIComponent(`Portfolio message from ${data.get("name")}`);
+      const body = encodeURIComponent(`${data.get("message")}\n\n— ${data.get("name")} (${data.get("email")})`);
+      window.location.href = `mailto:${form.dataset.email}?subject=${subject}&body=${body}`;
+      show("Opening your email app…", true);
+      return;
+    }
+
+    show("Sending…", true);
+    try {
+      const res = await fetch(form.action, { method: "POST", body: data, headers: { Accept: "application/json" } });
+      if (!res.ok) throw new Error(String(res.status));
+      form.reset();
+      show("Message sent. I'll get back to you soon.", true);
+    } catch {
+      show(`Couldn't send right now. Email me at ${form.dataset.email} instead.`, false);
+    }
+  });
+</script>

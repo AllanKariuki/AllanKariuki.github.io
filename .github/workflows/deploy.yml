@@ -17,6 +17,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Optional: set a repository variable FORMSPREE_ID to deliver contact-form messages.
+      PUBLIC_FORMSPREE_ID: ${{ vars.FORMSPREE_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

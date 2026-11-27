@@ -1,0 +1,28 @@
+---
+import Icon from "./Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
+import { COMPETENCIES } from "../data/site";
+---
+
+<section id="skills" class="py-20" aria-labelledby="skills-title">
+  <SectionHeader eyebrow="Core competencies" title="What I work with" id="skills-title" />
+  <div class="grid gap-5 md:grid-cols-3">
+    {
+      COMPETENCIES.map((c) => (
+        <div class="reveal card p-6">
+          <h3 class="flex items-center gap-3 font-semibold">
+            <span class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line bg-surface-2 text-accent">
+              <Icon name={c.icon} />
+            </span>
+            {c.title}
+          </h3>
+          <ul class="mt-5 flex flex-wrap gap-2">
+            {c.items.map((i) => (
+              <li class="tag">{i}</li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
