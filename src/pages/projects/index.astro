@@ -1,0 +1,75 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { DOMAINS } from "../../content.config";
+
+const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+const present = DOMAINS.filter((d) => projects.some((p) => p.data.domain === d));
+---
+
+<Base title="Projects" description="Projects by Allan Kariuki across applied ML, fintech, HealthTech, Web3 and mobile.">
+  <section class="pt-12 sm:pt-16" aria-labelledby="projects-title">
+    <SectionHeading command="ls ./projects" title="Projects" id="projects-title" />
+
+    <div id="filters" class="mb-6 hidden flex-wrap gap-2" role="group" aria-label="Filter by domain">
+      <button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>
+      {
+        present.map((d) => (
+          <button type="button" class="chip" data-filter={d} aria-pressed="false">
+            {d}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((p) => <ProjectCard project={p} />)}
+    </div>
+    <p id="empty" class="hidden text-muted">No projects in this category yet.</p>
+  </section>
+</Base>
+
+<style>
+  .chip {
+    border: 1px solid var(--color-line);
+    border-radius: 9999px;
+    padding: 0.25rem 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    cursor: pointer;
+  }
+  .chip:hover {
+    color: var(--color-fg);
+    border-color: var(--color-accent);
+  }
+  .chip[aria-pressed="true"] {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+</style>
+
+<script>
+  const bar = document.getElementById("filters");
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>("#filters .chip"));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>(".project-card"));
+  const empty = document.getElementById("empty");
+  bar?.classList.remove("hidden");
+  bar?.classList.add("flex");
+  chips.forEach((chip) =>
+    chip.addEventListener("click", () => {
+      const f = chip.dataset.filter;
+      chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+      let shown = 0;
+      cards.forEach((card) => {
+        const match = f === "all" || card.dataset.domain === f;
+        card.hidden = !match;
+        if (match) shown += 1;
+      });
+      empty?.classList.toggle("hidden", shown > 0);
+    }),
+  );
+</script>

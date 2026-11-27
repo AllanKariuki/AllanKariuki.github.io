@@ -1,0 +1,18 @@
+---
+interface Props {
+  items: string[];
+  max?: number;
+}
+const { items, max } = Astro.props;
+const shown = max ? items.slice(0, max) : items;
+const rest = items.length - shown.length;
+---
+
+<ul class="flex flex-wrap gap-1.5" aria-label="Tech stack">
+  {
+    shown.map((s) => (
+      <li class="rounded-md border border-line bg-bg px-2 py-0.5 font-mono text-xs text-muted">{s}</li>
+    ))
+  }
+  {rest > 0 && <li class="px-1 py-0.5 font-mono text-xs text-muted">+{rest}</li>}
+</ul>

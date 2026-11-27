@@ -1,0 +1,82 @@
+---
+import { SITE } from "../data/site";
+
+const lines = [
+  { prompt: true, text: "whoami" },
+  { prompt: false, text: SITE.name, cls: "text-2xl sm:text-4xl font-semibold text-gradient font-sans" },
+  { prompt: false, text: SITE.role, cls: "text-fg" },
+  { prompt: false, text: `${SITE.location} 🇰🇪`, cls: "text-muted" },
+];
+---
+
+<section class="pt-12 sm:pt-20" aria-labelledby="hero-title">
+  <h1 id="hero-title" class="sr-only">{SITE.name} — {SITE.role}</h1>
+  <div class="overflow-hidden rounded-xl border border-line bg-surface shadow-2xl shadow-black/20">
+    <div class="flex items-center gap-2 border-b border-line px-4 py-2.5">
+      <span class="h-3 w-3 rounded-full bg-[#ff5f56]" aria-hidden="true"></span>
+      <span class="h-3 w-3 rounded-full bg-[#ffbd2e]" aria-hidden="true"></span>
+      <span class="h-3 w-3 rounded-full bg-[#27c93f]" aria-hidden="true"></span>
+      <span class="ml-3 font-mono text-xs text-muted">allan@nairobi: ~</span>
+    </div>
+    <div class="space-y-2 p-5 font-mono text-sm sm:p-8 sm:text-base" id="terminal" aria-hidden="true">
+      {
+        lines.map((l) => (
+          <p class:list={["typed-line", l.cls]} data-text={l.text}>
+            {l.prompt && <span class="text-accent">$ </span>}
+            <span class="typed">{l.text}</span>
+          </p>
+        ))
+      }
+      <p class="typed-line text-muted">
+        <span class="text-accent">$ </span><span class="inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-accent"></span>
+      </p>
+    </div>
+  </div>
+  <p class="mt-8 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
+    I build applied ML, fintech infrastructure, Web3 and mobile products, mostly for East Africa: counterfeit-medicine
+    detection, English⇄Kiswahili translation, M-PESA-aware money tools and a dual-chain stablecoin bridge.
+  </p>
+  <div class="mt-6 flex flex-wrap gap-3">
+    <a href="/projects/" class="rounded-md bg-accent px-4 py-2 text-sm font-medium text-bg hover:opacity-90">View projects</a>
+    <a
+      href={SITE.github}
+      target="_blank"
+      rel="noopener"
+      class="rounded-md border border-line px-4 py-2 text-sm font-medium hover:border-accent hover:text-accent">GitHub ↗</a
+    >
+    <a href="#contact" class="rounded-md border border-line px-4 py-2 text-sm font-medium hover:border-accent hover:text-accent">Contact</a>
+  </div>
+</section>
+
+<script>
+  // Progressive enhancement: type each line in turn. Without JS, or with
+  // reduced motion, the full text is already in the HTML.
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce) {
+    const spans = Array.from(document.querySelectorAll<HTMLElement>("#terminal .typed"));
+    const lines = Array.from(document.querySelectorAll<HTMLElement>("#terminal .typed-line"));
+    const texts = spans.map((s) => s.textContent ?? "");
+    spans.forEach((s) => (s.textContent = ""));
+    lines.forEach((l, i) => i > 0 && (l.style.visibility = "hidden"));
+    let i = 0;
+    const typeLine = () => {
+      if (i >= spans.length) {
+        lines[lines.length - 1].style.visibility = "visible";
+        return;
+      }
+      lines[i].style.visibility = "visible";
+      const text = texts[i];
+      let n = 0;
+      const step = () => {
+        spans[i].textContent = text.slice(0, ++n);
+        if (n < text.length) setTimeout(step, i === 0 ? 70 : 28);
+        else {
+          i += 1;
+          setTimeout(typeLine, 260);
+        }
+      };
+      step();
+    };
+    typeLine();
+  }
+</script>

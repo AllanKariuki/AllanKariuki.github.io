@@ -1,0 +1,70 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import StatusPill from "../../components/StatusPill.astro";
+import StackBadges from "../../components/StackBadges.astro";
+import LinkButtons from "../../components/LinkButtons.astro";
+
+export async function getStaticPaths() {
+  const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: {
+      project,
+      prev: projects[i - 1] ?? null,
+      next: projects[i + 1] ?? null,
+    },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  prev: CollectionEntry<"projects"> | null;
+  next: CollectionEntry<"projects"> | null;
+}
+
+const { project, prev, next } = Astro.props;
+const { title, summary, domain, stack, status, year, repo, live, download, video } = project.data;
+const { Content } = await render(project);
+---
+
+<Base title={title} description={summary}>
+  <article class="pt-12 sm:pt-16">
+    <a href="/projects/" class="font-mono text-sm text-muted hover:text-accent">← cd ../projects</a>
+    <header class="mt-6 border-b border-line pb-8">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="font-mono text-xs text-muted">{domain} · {year}</span>
+        <StatusPill status={status} />
+      </div>
+      <h1 class="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
+      <p class="mt-3 max-w-2xl text-lg text-muted">{summary}</p>
+      <div class="mt-5"><StackBadges items={stack} /></div>
+      <div class="mt-6"><LinkButtons repo={repo} live={live} download={download} video={video} /></div>
+    </header>
+
+    <div class="prose-case max-w-3xl py-4">
+      <Content />
+    </div>
+
+    <nav class="mt-12 grid gap-4 border-t border-line pt-8 sm:grid-cols-2" aria-label="More projects">
+      {
+        prev ? (
+          <a href={`/projects/${prev.id}/`} class="rounded-xl border border-line p-4 hover:border-accent">
+            <span class="font-mono text-xs text-muted">← Previous</span>
+            <span class="mt-1 block font-medium">{prev.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next && (
+          <a href={`/projects/${next.id}/`} class="rounded-xl border border-line p-4 text-right hover:border-accent">
+            <span class="font-mono text-xs text-muted">Next →</span>
+            <span class="mt-1 block font-medium">{next.data.title}</span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Base>

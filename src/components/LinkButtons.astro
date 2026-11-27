@@ -1,0 +1,32 @@
+---
+interface Props {
+  repo: string;
+  live?: string;
+  download?: string;
+  video?: string;
+}
+const { repo, live, download, video } = Astro.props;
+const primary = "bg-accent text-bg hover:opacity-90";
+const secondary = "border border-line text-fg hover:border-accent hover:text-accent";
+const links = [
+  download && { href: download, label: "Download", cls: primary },
+  live && { href: live, label: "Live demo", cls: primary },
+  video && { href: video, label: "Watch demo", cls: secondary },
+  { href: repo, label: "Source code", cls: secondary },
+].filter(Boolean) as { href: string; label: string; cls: string }[];
+---
+
+<div class="flex flex-wrap gap-3">
+  {
+    links.map((l) => (
+      <a
+        href={l.href}
+        target="_blank"
+        rel="noopener"
+        class:list={["inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors", l.cls]}
+      >
+        {l.label} <span aria-hidden="true">↗</span>
+      </a>
+    ))
+  }
+</div>

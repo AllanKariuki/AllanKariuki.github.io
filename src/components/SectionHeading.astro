@@ -1,0 +1,13 @@
+---
+interface Props {
+  command: string;
+  title: string;
+  id?: string;
+}
+const { command, title, id } = Astro.props;
+---
+
+<div class="mb-8">
+  <p class="font-mono text-sm text-muted"><span class="text-accent">$</span> {command}</p>
+  <h2 id={id} class="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
+</div>

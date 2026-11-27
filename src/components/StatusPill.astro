@@ -1,0 +1,19 @@
+---
+import { STATUS_LABEL } from "../data/site";
+
+interface Props {
+  status: keyof typeof STATUS_LABEL;
+}
+const { status } = Astro.props;
+const tone = {
+  active: "text-accent border-accent/40 bg-accent/10",
+  shipped: "text-ok border-ok/40 bg-ok/10",
+  prototype: "text-warn border-warn/40 bg-warn/10",
+  learning: "text-violet border-violet/40 bg-violet/10",
+}[status];
+---
+
+<span class:list={["inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-xs", tone]}>
+  <span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span>
+  {STATUS_LABEL[status]}
+</span>

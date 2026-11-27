@@ -1,0 +1,30 @@
+---
+import type { CollectionEntry } from "astro:content";
+import StatusPill from "./StatusPill.astro";
+import StackBadges from "./StackBadges.astro";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+const { project } = Astro.props;
+const { title, summary, domain, stack, status, live, download } = project.data;
+const extras = [download && "Download", live && "Live"].filter(Boolean);
+---
+
+<article
+  data-domain={domain}
+  class="project-card group relative flex flex-col gap-4 rounded-xl border border-line bg-surface p-5 transition hover:-translate-y-0.5 hover:border-accent"
+>
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="font-mono text-xs text-muted">{domain}</span>
+    <StatusPill status={status} />
+    {extras.map((e) => <span class="font-mono text-xs text-ok">● {e}</span>)}
+  </div>
+  <h3 class="text-lg font-semibold leading-snug">
+    <a href={`/projects/${project.id}/`} class="after:absolute after:inset-0 after:content-[''] group-hover:text-accent">
+      {title}
+    </a>
+  </h3>
+  <p class="flex-1 text-sm leading-relaxed text-muted">{summary}</p>
+  <StackBadges items={stack} max={5} />
+</article>
