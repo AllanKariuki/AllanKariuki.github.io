@@ -1,16 +1,19 @@
 ---
+import Icon from "./Icon.astro";
 import { SITE } from "../data/site";
 ---
 
 <footer class="mt-24 border-t border-line">
-  <div
-    class="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6"
-  >
-    <p>© 2026 {SITE.name} · Built with Astro, hosted on GitHub Pages</p>
-    <ul class="flex gap-5">
-      <li><a class="hover:text-accent" href={SITE.github} target="_blank" rel="noopener">GitHub</a></li>
-      <li><a class="hover:text-accent" href={SITE.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
-      <li><a class="hover:text-accent" href={`mailto:${SITE.email}`}>Email</a></li>
-    </ul>
+  <div class="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+    <p class="text-sm text-muted">© 2026 {SITE.name} · Engineered in Nairobi</p>
+    <div class="flex flex-wrap items-center gap-2">
+      <a class="icon-btn" href={SITE.github} target="_blank" rel="noopener" aria-label="GitHub"><Icon name="github" /></a>
+      <a class="icon-btn" href={SITE.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn"><Icon name="linkedin" /></a>
+      <a class="icon-btn" href={`mailto:${SITE.email}`} aria-label="Email"><Icon name="mail" /></a>
+      <a class="icon-btn" href={SITE.whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp"><Icon name="whatsapp" /></a>
+      <a href={SITE.cv} target="_blank" rel="noopener" class="btn btn-outline btn-sm ml-1">
+        <Icon name="download" size={14} /> CV
+      </a>
+    </div>
   </div>
 </footer>

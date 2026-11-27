@@ -1,82 +1,45 @@
 ---
-import { SITE } from "../data/site";
-
-const lines = [
-  { prompt: true, text: "whoami" },
-  { prompt: false, text: SITE.name, cls: "text-2xl sm:text-4xl font-semibold text-gradient font-sans" },
-  { prompt: false, text: SITE.role, cls: "text-fg" },
-  { prompt: false, text: `${SITE.location} 🇰🇪`, cls: "text-muted" },
-];
+import Icon from "./Icon.astro";
+import { HERO, SITE, STACK_TILES } from "../data/site";
 ---
 
-<section class="pt-12 sm:pt-20" aria-labelledby="hero-title">
-  <h1 id="hero-title" class="sr-only">{SITE.name} — {SITE.role}</h1>
-  <div class="overflow-hidden rounded-xl border border-line bg-surface shadow-2xl shadow-black/20">
-    <div class="flex items-center gap-2 border-b border-line px-4 py-2.5">
-      <span class="h-3 w-3 rounded-full bg-[#ff5f56]" aria-hidden="true"></span>
-      <span class="h-3 w-3 rounded-full bg-[#ffbd2e]" aria-hidden="true"></span>
-      <span class="h-3 w-3 rounded-full bg-[#27c93f]" aria-hidden="true"></span>
-      <span class="ml-3 font-mono text-xs text-muted">allan@nairobi: ~</span>
+<section id="home" class="grid min-h-[calc(100svh-4rem)] items-center gap-12 py-16 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+  <div class="reveal">
+    <span class="pill">{HERO.eyebrow}</span>
+    <h1 class="mt-6 text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+      {SITE.name} — <span class="text-accent">{SITE.role}</span> building real-time, financial and Web3 systems
+    </h1>
+    <p class="mt-6 max-w-xl font-display text-sm leading-relaxed text-muted sm:text-base">{HERO.stackLine}</p>
+    <p class="mt-5 max-w-xl text-base leading-relaxed text-fg/85 sm:text-lg">{HERO.summary}</p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="/#projects" class="btn btn-primary">View my work <Icon name="arrow-right" size={14} /></a>
+      <a href={SITE.cv} target="_blank" rel="noopener" class="btn btn-outline">Download CV</a>
     </div>
-    <div class="space-y-2 p-5 font-mono text-sm sm:p-8 sm:text-base" id="terminal" aria-hidden="true">
+    <div class="mt-6 flex gap-2">
+      <a class="icon-btn" href={SITE.github} target="_blank" rel="noopener" aria-label="GitHub"><Icon name="github" /></a>
+      <a class="icon-btn" href={SITE.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn"><Icon name="linkedin" /></a>
+      <a class="icon-btn" href={`mailto:${SITE.email}`} aria-label="Email"><Icon name="mail" /></a>
+      <a class="icon-btn" href={SITE.whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp"><Icon name="whatsapp" /></a>
+    </div>
+  </div>
+
+  <div class="reveal card p-6 shadow-[0_0_60px_-15px] shadow-accent/25 sm:p-8">
+    <p class="eyebrow">Stack expertise</p>
+    <h2 class="mt-1 text-xl font-semibold sm:text-2xl">Technical Stack</h2>
+    <ul class="mt-6 grid gap-3 sm:grid-cols-2">
       {
-        lines.map((l) => (
-          <p class:list={["typed-line", l.cls]} data-text={l.text}>
-            {l.prompt && <span class="text-accent">$ </span>}
-            <span class="typed">{l.text}</span>
-          </p>
+        STACK_TILES.map((t) => (
+          <li class="flex items-center gap-3 rounded-md border border-line bg-surface-2 px-4 py-3 font-display text-sm">
+            <Icon name={t.icon} class="text-accent" />
+            {t.label}
+          </li>
         ))
       }
-      <p class="typed-line text-muted">
-        <span class="text-accent">$ </span><span class="inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-accent"></span>
-      </p>
+    </ul>
+    <div class="mt-6 flex flex-wrap gap-2">
+      <span class="pill normal-case tracking-normal"><Icon name="map-pin" size={13} class="text-accent" /> {SITE.location}</span>
+      <span class="pill normal-case tracking-normal"><Icon name="briefcase" size={13} class="text-accent" /> Lead Engineer</span>
+      <span class="pill normal-case tracking-normal"><span class="h-1.5 w-1.5 rounded-full bg-ok"></span> Open to remote</span>
     </div>
   </div>
-  <p class="mt-8 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-    I build applied ML, fintech infrastructure, Web3 and mobile products, mostly for East Africa: counterfeit-medicine
-    detection, English⇄Kiswahili translation, M-PESA-aware money tools and a dual-chain stablecoin bridge.
-  </p>
-  <div class="mt-6 flex flex-wrap gap-3">
-    <a href="/projects/" class="rounded-md bg-accent px-4 py-2 text-sm font-medium text-bg hover:opacity-90">View projects</a>
-    <a
-      href={SITE.github}
-      target="_blank"
-      rel="noopener"
-      class="rounded-md border border-line px-4 py-2 text-sm font-medium hover:border-accent hover:text-accent">GitHub ↗</a
-    >
-    <a href="#contact" class="rounded-md border border-line px-4 py-2 text-sm font-medium hover:border-accent hover:text-accent">Contact</a>
-  </div>
 </section>
-
-<script>
-  // Progressive enhancement: type each line in turn. Without JS, or with
-  // reduced motion, the full text is already in the HTML.
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!reduce) {
-    const spans = Array.from(document.querySelectorAll<HTMLElement>("#terminal .typed"));
-    const lines = Array.from(document.querySelectorAll<HTMLElement>("#terminal .typed-line"));
-    const texts = spans.map((s) => s.textContent ?? "");
-    spans.forEach((s) => (s.textContent = ""));
-    lines.forEach((l, i) => i > 0 && (l.style.visibility = "hidden"));
-    let i = 0;
-    const typeLine = () => {
-      if (i >= spans.length) {
-        lines[lines.length - 1].style.visibility = "visible";
-        return;
-      }
-      lines[i].style.visibility = "visible";
-      const text = texts[i];
-      let n = 0;
-      const step = () => {
-        spans[i].textContent = text.slice(0, ++n);
-        if (n < text.length) setTimeout(step, i === 0 ? 70 : 28);
-        else {
-          i += 1;
-          setTimeout(typeLine, 260);
-        }
-      };
-      step();
-    };
-    typeLine();
-  }
-</script>

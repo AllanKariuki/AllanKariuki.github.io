@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   site: "https://allankariuki.github.io",
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !page.endsWith("/about/") })],
   vite: {
     plugins: [tailwindcss()],
   },

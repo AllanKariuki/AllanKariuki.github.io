@@ -1,30 +1,68 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import Icon from "./Icon.astro";
+import ProjectCover from "./ProjectCover.astro";
 import StatusPill from "./StatusPill.astro";
-import StackBadges from "./StackBadges.astro";
 
 interface Props {
   project: CollectionEntry<"projects">;
 }
 const { project } = Astro.props;
-const { title, summary, domain, stack, status, live, download } = project.data;
-const extras = [download && "Download", live && "Live"].filter(Boolean);
+const { title, summary, domain, stack, status, repo, live, download, cover } = project.data;
+const isLive = Boolean(live || download);
+const shown = stack.slice(0, 4);
+const rest = stack.length - shown.length;
 ---
 
-<article
-  data-domain={domain}
-  class="project-card group relative flex flex-col gap-4 rounded-xl border border-line bg-surface p-5 transition hover:-translate-y-0.5 hover:border-accent"
->
-  <div class="flex flex-wrap items-center gap-2">
-    <span class="font-mono text-xs text-muted">{domain}</span>
-    <StatusPill status={status} />
-    {extras.map((e) => <span class="font-mono text-xs text-ok">● {e}</span>)}
+<article data-domain={domain} class="project-card reveal card group flex flex-col overflow-hidden transition hover:-translate-y-1 hover:border-accent/60">
+  <a href={`/projects/${project.id}/`} class="relative block aspect-[2/1] overflow-hidden border-b border-line" tabindex="-1" aria-hidden="true">
+    {
+      cover ? (
+        <img src={cover} alt="" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+      ) : (
+        <div class="h-full w-full transition duration-500 group-hover:scale-105">
+          <ProjectCover domain={domain} title={title} seed={project.id} />
+        </div>
+      )
+    }
+    {
+      isLive && (
+        <span class="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-ok/90 px-2.5 py-1 font-display text-[0.65rem] font-semibold uppercase tracking-widest text-bg">
+          <span class="h-1.5 w-1.5 rounded-full bg-bg" /> Live
+        </span>
+      )
+    }
+  </a>
+  <div class="flex flex-1 flex-col gap-3 p-5">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="font-display text-[0.7rem] uppercase tracking-widest text-muted">{domain}</span>
+      <StatusPill status={status} />
+    </div>
+    <h3 class="text-lg font-semibold leading-snug">
+      <a href={`/projects/${project.id}/`} class="hover:text-accent">{title}</a>
+    </h3>
+    <p class="flex-1 text-sm leading-relaxed text-muted">{summary}</p>
+    <ul class="flex flex-wrap gap-1.5" aria-label="Tech stack">
+      {shown.map((s) => <li class="tag">{s}</li>)}
+      {rest > 0 && <li class="tag">+{rest}</li>}
+    </ul>
+    <div class="mt-2 flex flex-wrap gap-2">
+      <a href={`/projects/${project.id}/`} class="btn btn-outline btn-sm">Details</a>
+      <a href={repo} target="_blank" rel="noopener" class="btn btn-outline btn-sm"><Icon name="github" size={13} /> Source</a>
+      {
+        download && (
+          <a href={download} target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+            <Icon name="download" size={13} /> Download
+          </a>
+        )
+      }
+      {
+        live && (
+          <a href={live} target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+            <Icon name="external" size={13} /> Live demo
+          </a>
+        )
+      }
+    </div>
   </div>
-  <h3 class="text-lg font-semibold leading-snug">
-    <a href={`/projects/${project.id}/`} class="after:absolute after:inset-0 after:content-[''] group-hover:text-accent">
-      {title}
-    </a>
-  </h3>
-  <p class="flex-1 text-sm leading-relaxed text-muted">{summary}</p>
-  <StackBadges items={stack} max={5} />
 </article>

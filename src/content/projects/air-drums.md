@@ -1,5 +1,5 @@
 ---
-title: Air Drums
+title: Augmented Reality Air Drums
 summary: Play drums in the air. A webcam tracks your hand movements and plays stored drum sounds.
 domain: Computer Vision
 stack: [Python, MediaPipe, OpenCV]
@@ -16,13 +16,13 @@ A fun computer-vision experiment: can a plain laptop webcam turn hand movements 
 
 ## What I built
 
-- Real-time **hand tracking** from the webcam feed.
-- Mapping tracked hand movements to drum hits that trigger stored sounds.
+- Real-time tracking of **both hands** from the webcam, using MediaPipe's 21-point hand landmarks.
+- **Fingertip positions mapped to virtual drum zones**, so striking the air over a zone plays that drum's sound.
 - Gesture detection experiments, including a thumbs-up gesture.
 
 ## Stack & architecture
 
-Python scripts for the webcam loop, hand tracking and gesture detection.
+Python with OpenCV for the webcam loop and MediaPipe for hand landmarks.
 
 ## Status / What's next
 
